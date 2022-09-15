@@ -1,0 +1,26 @@
+const router = require('express').Router()
+const createArticle = require('../Controllers/Articles/createArticle')
+const { getArticles, getArticlesById, getArticlesByCategory } = require('../Controllers/Articles/getArticles')
+const editArticle = require('../Controllers/Articles/editArticles')
+const removeArticleById = require('../Controllers/Articles/removeArticle')
+const removeCategory = require('../Controllers/Articles/removeCategory')
+const getAdminByToken = require('../admin/admin')
+const verifyToken = require('../helper/verify-token')
+const { getCategory, getCategoryById } = require('../Controllers/Articles/getCategory')
+const createCategory = require('../Controllers/Articles/createCategory')
+const uploadImages = require('../helper/imageUpload')
+const userEqualsOrError = require('../helper/verify-user')
+
+// Article routes
+router.get('/articles', getArticles)
+router.post('/articles/newArticle', verifyToken, createArticle)
+router.put('/articles/edit/:id', verifyToken,userEqualsOrError, editArticle)
+router.get('/category', getCategory)
+router.post('/category/createCategory', verifyToken, uploadImages, createCategory)
+router.get('/category/articles/:name', getArticlesByCategory)
+router.get('/category/:id', getCategoryById)
+router.delete('/category/deleteCategory/:id', getAdminByToken, removeCategory)
+router.delete('/articles/delete/:id', verifyToken,userEqualsOrError, removeArticleById)
+router.get('/article/:id', getArticlesById)
+
+module.exports = router

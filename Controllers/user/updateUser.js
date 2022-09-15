@@ -3,6 +3,7 @@ const { existsOrError, equalsOrError, validEmail } = require('../../helper/valid
 const verifyId = require('../../helper/verifyId')
 const bcrypt = require('bcrypt')
 const checkExists = require('../../helper/check-exists')
+const Articles = require('../../models/Articles')
 
 module.exports = class updateUser {
     //only available for admin  updating all user data
@@ -21,18 +22,17 @@ module.exports = class updateUser {
             validEmail(email, 'Email invalido!')
 
             // check if email is aready been used
-            let checkEmail = await User.findOne({ email: email })
+            const checkEmail = await User.findOne({ email: email })
 
-            const emailAlreadyUsed = (msg) => {
-                if (checkEmail) throw msg
+            if(checkEmail){
+                let msg = 'Email ja esta sendo usado!'
+                throw msg
             }
-
-            emailAlreadyUsed('Email ja esta sendo usado!')
             user.email = email
 
-            existsOrError(password, 'senha invalida!')
-            existsOrError(confirmPassword, ' Confirmação senha invalida!')
-            equalsOrError(password, confirmPassword, 'Senha nao coecidem')
+            existsOrError(password, 'A senha é necessaria!')
+            existsOrError(confirmPassword, 'A confirmação senha é necessaria!')
+            equalsOrError(password, confirmPassword, 'Senhas diferentes!')
             user.password = password
 
             await User.findOneAndUpdate(
@@ -54,8 +54,18 @@ module.exports = class updateUser {
 
         try {
             verifyId(id, 'O id é invalido!')
-            const userExists = await User.findOne({ _id: id })
-            checkExists(userExists, 'Usuario não encontrado!')
+            const user = await User.findOne({ _id: id })
+            
+            checkExists(user, 'Usuario não encontrado!')
+
+            const articles = await Articles.find()
+            articles.map((articles) => {
+                const userId = articles.user._id
+                if (userId === id) {
+                    let msg = 'Usario tem artigos!'
+                    throw msg
+                }
+            })
 
             await User.findOneAndDelete({
                 _id: id

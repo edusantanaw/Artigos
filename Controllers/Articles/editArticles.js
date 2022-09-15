@@ -1,13 +1,12 @@
 const verifyId = require('../../helper/verifyId')
 const Article = require('../../models/Articles')
 const { existsOrError } = require('../../helper/validations')
-const userEqualsOrError = require('../../helper/verify-user')
 const checkExists = require('../../helper/check-exists')
 
 const editArticle = async (req, res) => {
 
     const id = req.params.id
-    const { category, title, content } = req.body
+    const { category, title, content, summary } = req.body
 
     try {
         verifyId(id, 'Id invalido!')
@@ -16,16 +15,11 @@ const editArticle = async (req, res) => {
         checkExists(article, 'Artigo não  encontrado!')
 
         const userId = article.user._id
-        userEqualsOrError(req, userId, 'Acesso negado!')
-
-        existsOrError(category, ' A categoria é necessario')
-        article.category = category
-
-        existsOrError(title, 'O title é necessario')
-        article.title = title
-
-        existsOrError(content, 'O conteudo é necessario')
-        article.content = content
+      
+        if(category) article.category = category
+        if(title)article.title = title
+        if(content)article.content = content
+        if(summary) article.summary = summary   
 
         await Article.findOneAndUpdate(
             { _id: article.id },

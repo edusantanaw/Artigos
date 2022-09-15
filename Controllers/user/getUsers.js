@@ -2,7 +2,6 @@ const checkExists = require('../../helper/check-exists')
 const verifyId = require('../../helper/verifyId')
 const User = require('../../models/User')
 
-
     const getAllUsers = async (req, res )=> {
         try {
             const user = await User.find()
@@ -22,7 +21,6 @@ const User = require('../../models/User')
             verifyId(id, 'O id é Invalido')
             const user = await User.findOne({ _id: id })
             checkExists(user, 'Usuario não encontrado!')
-   
             res.json({ user })
 
         } catch (msg) {

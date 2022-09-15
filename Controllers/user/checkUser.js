@@ -7,11 +7,8 @@ const checkUser = async (req, res) => {
 
     if (req.headers.authorization) {
         const token = getToken(req)
-        
         const decoded = jwt.verify(token, 'edusantanaw')
-
         currentUser = await User.findById(decoded.id)
-
         currentUser.password = undefined
     } else {
         currentUser = null

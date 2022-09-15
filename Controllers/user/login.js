@@ -4,7 +4,7 @@ const createUserToken = require('../../helper/create-user-token')
 const { existsOrError } = require('../../helper/validations')
 const checkExists = require('../../helper/check-exists')
 
-const login = async(req, res)=> {
+const login = async (req, res) => {
 
     const { email, password } = req.body
 
@@ -20,8 +20,9 @@ const login = async(req, res)=> {
             let msg = 'Emai/senha invalidos!'
             throw msg
         }
+        
         createUserToken(user, req, res)
-    
+
     } catch (msg) {
         res.status(400).send(msg)
     }

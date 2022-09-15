@@ -6,12 +6,19 @@ const Article = new mongoose.model(
     new Schema({
         category: {
             type: String,
+            required: true
         },
         title: {
             type: String,
+            required: true
+        },
+        summary:{
+            type: String,
+            required: true
         },
         content: {
             type: String,
+            required: true
         },
         user: Object
     })
