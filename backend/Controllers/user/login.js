@@ -22,7 +22,6 @@ const login = async (req, res) => {
         }
         
         createUserToken(user, req, res)
-
     } catch (msg) {
         res.status(400).send(msg)
     }

@@ -9,6 +9,7 @@ const createUserToken = (user, req, res) => {
     res.status(200).json({
         message: 'usuario autenticado!',
         token: token,
+        user: user,
         userId: user._id
     })
 }
